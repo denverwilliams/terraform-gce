@@ -1,0 +1,14 @@
+#cloud-config
+coreos:
+  units:
+    - name: "hanlon.service"
+      command: "start"
+      content: |
+        [Unit]
+        Description=Hanlon container
+        After=docker.service
+
+        [Service]
+        Restart=always
+        ExecStart=/usr/bin/docker run --privileged=true --name=hanlon --net=host -e HANLON_SUBNETS=0.0.0.0/0 -e PERSIST_MODE=@json docker.ii.org.nz/iichip/hanlon:cncfci
+        ExecStop=/usr/bin/docker rm -f hanlon
